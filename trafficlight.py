@@ -7,11 +7,6 @@ import time
 pygame.init()
 screen=pygame.display.set_mode((600,900),HWSURFACE|DOUBLEBUF|RESIZABLE)
 
-
-
-down = pygame.image.load("images/start_button_down.jpg")
-#up = pygame.image.load("images/start_button_up.jpg")
-
 def load_image(name):
 	fullname = os.path.join("images", name)
 	try:
@@ -22,6 +17,10 @@ def load_image(name):
 	image = image.convert()
 	return image, image.get_rect()
 def lightcycle(background, red):
+	pygame.event.set_blocked(MOUSEBUTTONDOWN)
+	buttondown, rect = load_image("start_button_down.jpg")
+	buttondown = pygame.transform.scale(buttondown, (145,160))
+	screen.blit(buttondown, (380,270))
 	green = pygame.image.load("images/green.jpg")
 	yellow = pygame.image.load("images/yellow.jpg")
 	now = time.time()
@@ -35,10 +34,13 @@ def lightcycle(background, red):
 		screen.blit(background, (0,0))
 		screen.blit(yellow, (0,303))
 		pygame.display.flip()
+	button, rect = load_image("start_button_up.jpg")
+	button = pygame.transform.scale(button, (400,300))
+	screen.blit(button, (200,200))
 	screen.blit(background, (0,0))
 	screen.blit(red, (0,11))
 	pygame.display.flip()
-	return True
+	pygame.event.set_allowed(MOUSEBUTTONDOWN)
 
 class Button(pygame.sprite.Sprite):
     def __init__(self):
@@ -58,8 +60,11 @@ class Button(pygame.sprite.Sprite):
         else: return False
 		
 def main():
-	background = pygame.image.load("images/light.jpg")
-	red = pygame.image.load("images/red.jpg")
+	background, rect = load_image("light.jpg")
+	red, rect = load_image("red.jpg")
+	button, rect = load_image("start_button_up.jpg")
+	button = pygame.transform.scale(button, (400,300))
+	screen.blit(button, (200,200))
 	screen.blit(background, (0,0))
 	screen.blit(red, (0,11))
 	button = Button()
@@ -70,6 +75,7 @@ def main():
 			if event.type == MOUSEBUTTONDOWN:
 				mouse = pygame.mouse.get_pos()
 				if button.pressed(mouse):
-					done = lightcycle(background, red)
+					lightcycle(background, red)
 	
-if __name__ == '__main__': main()
+if __name__ == '__main__': 
+	main()
